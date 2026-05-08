@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import About from './pages/About'
@@ -14,7 +15,15 @@ function getPage(): { page: Page; slug?: string } {
 }
 
 export default function App() {
-  const { page, slug } = getPage()
+  const [location, setLocation] = useState(getPage)
+
+  useEffect(() => {
+    const handler = () => setLocation(getPage())
+    window.addEventListener('popstate', handler)
+    return () => window.removeEventListener('popstate', handler)
+  }, [])
+
+  const { page, slug } = location
 
   return (
     <Layout>

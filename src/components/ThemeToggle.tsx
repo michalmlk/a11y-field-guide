@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import styles from './ThemeToggle.module.css'
 
 type Theme = 'light' | 'dark'
 
@@ -23,16 +24,7 @@ export default function ThemeToggle() {
       onClick={toggle}
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       aria-pressed={theme === 'dark'}
-      style={{
-        background: 'none',
-        border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-md)',
-        padding: 'var(--space-2)',
-        cursor: 'pointer',
-        color: 'var(--color-text)',
-        fontSize: '1rem',
-        lineHeight: 1,
-      }}
+      className={styles.toggle}
     >
       {theme === 'light' ? '🌙' : '☀️'}
     </button>

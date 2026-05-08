@@ -1,7 +1,21 @@
-import { lazy, Suspense, useMemo } from 'react'
-import type { ComponentType } from 'react'
+import { lazy, Suspense, useMemo, Component } from 'react'
+import type { ComponentType, ReactNode } from 'react'
 import { articles } from '../articles/index'
 import type { ArticleMeta } from '../components/ArticleCard'
+
+class ArticleErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false }
+  static getDerivedStateFromError() { return { failed: true } }
+  render() {
+    if (this.state.failed) return (
+      <div>
+        <p>Could not load article.</p>
+        <a href="/">Back to articles</a>
+      </div>
+    )
+    return this.props.children
+  }
+}
 
 const mdxModules = import.meta.glob<{ default: ComponentType }>(
   '../articles/*.mdx'
@@ -39,9 +53,11 @@ export default function ArticlePage({ slug }: { slug: string }) {
           {meta.tags.map(tag => <li key={tag}>{tag}</li>)}
         </ul>
       </header>
-      <Suspense fallback={<p>Loading…</p>}>
-        <MDXContent />
-      </Suspense>
+      <ArticleErrorBoundary>
+        <Suspense fallback={<p>Loading…</p>}>
+          <MDXContent />
+        </Suspense>
+      </ArticleErrorBoundary>
     </article>
   )
 }

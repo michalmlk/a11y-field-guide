@@ -5,12 +5,19 @@ import styles from './AuditPanel.module.css'
 export default function AuditPanel() {
   const [results, setResults] = useState<AxeResult | null>(null)
   const [running, setRunning] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const run = useCallback(async () => {
     setRunning(true)
-    const result = await runAxe()
-    setResults(result)
-    setRunning(false)
+    setError(null)
+    try {
+      const result = await runAxe()
+      setResults(result)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Audit failed')
+    } finally {
+      setRunning(false)
+    }
   }, [])
 
   const violationCount = results?.violations.length ?? 0
@@ -28,6 +35,11 @@ export default function AuditPanel() {
           {running ? 'Running…' : 'Run axe'}
         </button>
       </div>
+      {error && (
+        <div className={styles.results} role="alert" aria-live="assertive">
+          <p className={styles.violation}>{error}</p>
+        </div>
+      )}
       {results && (
         <div
           className={styles.results}
