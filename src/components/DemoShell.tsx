@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import styles from './DemoShell.module.css'
 
 interface DemoShellProps {
@@ -8,6 +9,7 @@ interface DemoShellProps {
 }
 
 export default function DemoShell({ title, mount }: DemoShellProps) {
+  const { t } = useTranslation()
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -21,7 +23,7 @@ export default function DemoShell({ title, mount }: DemoShellProps) {
   }, [mount])
 
   return (
-    <section className={styles.shell} aria-label={`Demo: ${title}`}>
+    <section className={styles.shell} aria-label={t('demo.label', { title })}>
       <h3 className={styles.heading}>{title}</h3>
       <div className={styles.stage} ref={containerRef} />
     </section>

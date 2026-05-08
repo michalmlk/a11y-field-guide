@@ -1,0 +1,14 @@
+{
+  "focus-trap": {
+    "title": "Pułapka fokusu",
+    "description": "Utrzymuj fokus klawiatury wewnątrz okien modalnych dzięki prawidłowej implementacji pułapki fokusu."
+  },
+  "aria-roles": {
+    "title": "Role ARIA",
+    "description": "Używaj ról ARIA, aby nadawać semantyczne znaczenie niestandardowym, interaktywnym widżetom."
+  },
+  "color-contrast": {
+    "title": "Kontrast kolorów",
+    "description": "Zapewnij wystarczający kontrast dla tekstu i elementów interaktywnych."
+  }
+}

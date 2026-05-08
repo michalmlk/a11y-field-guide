@@ -1,0 +1,84 @@
+import DemoShell from '../../components/DemoShell'
+import CodeCompare from '../../components/CodeCompare'
+import { mountModalDemo } from '../../demos/modal-dialog.js'
+import '../../demos/modal-dialog.css'
+
+## Czym jest pułapka fokusu?
+
+Gdy otwiera się okno modalne, fokus klawiatury musi pozostać wewnątrz niego.
+Bez pułapki naciśnięcie Tab z ostatniego elementu powoduje przejście fokusu
+do elementów przeglądarki lub do strony pod nakładką.
+
+WCAG **2.1.2 Brak pułapki klawiatury** wymaga, aby użytkownik mógł przesuwać
+fokus *do* i *z* dowolnego komponentu wyłącznie za pomocą klawiatury. Poprawna
+pułapka fokusu to spełnia: Tab krąży w obrębie okna, a Escape (lub widoczny
+przycisk Zamknij) przywraca fokus do elementu, który je otworzył.
+
+## Dlaczego to ważne
+
+Użytkownicy czytników ekranu poruszają się klawiszem Tab. Jeśli fokus wymknie
+się z okna modalnego, tracą kontekst i mogą nie być w stanie wrócić bez
+przeładowania strony. Osoby polegające na nawigacji klawiaturą mają ten sam
+problem.
+
+## Wzorzec
+
+Przechwyć `keydown` w oknie i przekieruj Tab/Shift+Tab, gdy fokus dotrze do granicy.
+
+<CodeCompare
+  badLabel="Bez pułapki fokusu"
+  goodLabel="Z pułapką fokusu"
+  bad={`function open() {
+  dialog.classList.remove('hidden')
+  dialog.querySelector('button').focus()
+  // Nic nie pułapkuje Tab — fokus ucieka
+}`}
+  good={`const FOCUSABLE =
+  'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'
+
+function trapFocus(e) {
+  const nodes = [...dialog.querySelectorAll(FOCUSABLE)]
+  const first = nodes[0]
+  const last  = nodes[nodes.length - 1]
+  if (e.key === 'Tab') {
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus()
+    }
+  }
+  if (e.key === 'Escape') close()
+}
+
+function open() {
+  dialog.classList.remove('hidden')
+  dialog.querySelector('button').focus()
+  dialog.addEventListener('keydown', trapFocus)
+}
+
+function close() {
+  dialog.classList.add('hidden')
+  dialog.removeEventListener('keydown', trapFocus)
+  openBtn.focus()   // ← przywróć fokus do wyzwalacza
+}`}
+/>
+
+## Demo na żywo
+
+Otwórz okno, potem przechodź Tab przez kontrolki. Naciśnij Escape lub Zamknij, aby je odrzucić.
+
+<DemoShell title="Demo pułapki fokusu" mount={mountModalDemo} />
+
+## Najważniejsze szczegóły
+
+- **Przywróć fokus do wyzwalacza** podczas zamykania — nie do początku strony.
+- **Przenieś fokus do okna po otwarciu** — do pierwszego fokusowalnego elementu lub nagłówka okna.
+- **Obsłuż Escape** oprócz każdego widocznego przycisku zamykania.
+- **`aria-modal="true"`** mówi obsługującym czytnikom ekranu, by ukryły treść tła.
+- **Ponownie pobierz fokusowalne elementy** wewnątrz handlera, aby uwzględnić dynamicznie dodawane kontrolki.
+
+## Odniesienia WCAG
+
+- **2.1.1 Klawiatura** — Cała funkcjonalność dostępna z klawiatury
+- **2.1.2 Brak pułapki klawiatury** — Fokus zawsze można przenieść standardowymi klawiszami
+- **4.1.2 Nazwa, rola, wartość** — `role="dialog"` + `aria-labelledby` zapewniają nazwę dostępną

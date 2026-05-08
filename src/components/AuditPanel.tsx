@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { runAxe, type AxeResult } from '../utils/run-axe'
 import styles from './AuditPanel.module.css'
 
 export default function AuditPanel() {
+  const { t } = useTranslation()
   const [results, setResults] = useState<AxeResult | null>(null)
   const [running, setRunning] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -14,25 +16,25 @@ export default function AuditPanel() {
       const result = await runAxe()
       setResults(result)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Audit failed')
+      setError(e instanceof Error ? e.message : t('audit.failed'))
     } finally {
       setRunning(false)
     }
-  }, [])
+  }, [t])
 
   const violationCount = results?.violations.length ?? 0
 
   return (
-    <aside className={styles.panel} aria-label="Accessibility audit">
+    <aside className={styles.panel} aria-label={t('audit.panelLabel')}>
       <div className={styles.header}>
-        <span className={styles.title}>A11y Audit</span>
+        <span className={styles.title}>{t('audit.title')}</span>
         <button
           onClick={run}
           disabled={running}
           className={styles.runBtn}
           aria-busy={running}
         >
-          {running ? 'Running…' : 'Run axe'}
+          {running ? t('audit.running') : t('audit.run')}
         </button>
       </div>
       {error && (
@@ -45,10 +47,10 @@ export default function AuditPanel() {
           className={styles.results}
           role="status"
           aria-live="polite"
-          aria-label={`Audit complete: ${violationCount} violation${violationCount !== 1 ? 's' : ''}`}
+          aria-label={t('audit.complete', { count: violationCount })}
         >
           {violationCount === 0 ? (
-            <p className={styles.pass}>No violations found</p>
+            <p className={styles.pass}>{t('audit.noViolations')}</p>
           ) : (
             <ul className={styles.list}>
               {results.violations.map(v => (

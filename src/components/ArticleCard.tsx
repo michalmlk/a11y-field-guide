@@ -1,36 +1,51 @@
-import styles from './ArticleCard.module.css'
+import { Link } from "react-router";
+import { useTranslation } from "react-i18next";
+import styles from "./ArticleCard.module.css";
 
 export interface ArticleMeta {
-  slug: string
-  title: string
-  description: string
-  wcag: string
-  tags: string[]
+	slug: string;
+	wcag: string;
+	tags: string[];
 }
 
 interface ArticleCardProps {
-  article: ArticleMeta
+	article: ArticleMeta;
 }
 
 export default function ArticleCard({ article }: ArticleCardProps) {
-  return (
-    <article className={styles.card}>
-      <header>
-        <h2 className={styles.title}>
-          <a href={`/articles/${article.slug}`}>{article.title}</a>
-        </h2>
-        <p className={styles.wcag}>
-          <span className={styles.tag}>WCAG {article.wcag}</span>
-        </p>
-      </header>
-      <p className={styles.description}>{article.description}</p>
-      <footer className={styles.footer}>
-        <ul className={styles.tags} aria-label="Tags">
-          {article.tags.map(tag => (
-            <li key={tag} className={styles.tag}>{tag}</li>
-          ))}
-        </ul>
-      </footer>
-    </article>
-  )
+	const { t } = useTranslation();
+	const title = t(`articles:${article.slug}.title`);
+	const description = t(`articles:${article.slug}.description`);
+
+	const articleAriaLabel = t("article.ariaLabel", {
+		title,
+		description,
+		wcag: article.wcag,
+		tags: article.tags.join(", "),
+	});
+
+	return (
+		<article className={styles.card} aria-label={articleAriaLabel}>
+			<header>
+				<h2 className={styles.title}>
+					<Link to={`/articles/${article.slug}`}>{title}</Link>
+				</h2>
+				<p className={styles.wcag}>
+					<span className={styles.tag}>
+						{t("article.wcag", { id: article.wcag })}
+					</span>
+				</p>
+			</header>
+			<p className={styles.description}>{description}</p>
+			<footer className={styles.footer}>
+				<ul className={styles.tags} aria-label={t("article.tagsLabel")}>
+					{article.tags.map((tag) => (
+						<li key={tag} className={styles.tag}>
+							{tag}
+						</li>
+					))}
+				</ul>
+			</footer>
+		</article>
+	);
 }

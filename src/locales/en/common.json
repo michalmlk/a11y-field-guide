@@ -1,0 +1,58 @@
+{
+  "site": {
+    "title": "A11y Field Guide",
+    "homeAriaLabel": "A11y Field Guide home",
+    "tagline": "Practical accessibility patterns — with working demos and WCAG references.",
+    "footer": "Built to explore web accessibility patterns."
+  },
+  "nav": {
+    "primary": "Primary navigation",
+    "about": "About",
+    "skipToMain": "Skip to main content",
+    "articles": "Articles",
+    "breadcrumb": "Breadcrumb"
+  },
+  "home": {
+    "articlesLabel": "Articles"
+  },
+  "about": {
+    "title": "About",
+    "body": "A11y Field Guide is a hands-on reference for web accessibility patterns. Each article includes a live demo, a bad/good code comparison, and the relevant WCAG success criteria."
+  },
+  "article": {
+    "tagsLabel": "Tags",
+    "loading": "Loading…",
+    "loadFailed": "Could not load article.",
+    "backToArticles": "Back to articles",
+    "notFound": "Article not found",
+    "wcag": "WCAG {{id}}",
+    "ariaLabel": "{{title}} {{description}}, WCAG: {{wcag}}, tags: {{tags}}"
+  },
+  "audit": {
+    "panelLabel": "Accessibility audit",
+    "title": "A11y Audit",
+    "run": "Run axe",
+    "running": "Running…",
+    "failed": "Audit failed",
+    "complete_one": "Audit complete: {{count}} violation",
+    "complete_other": "Audit complete: {{count}} violations",
+    "noViolations": "No violations found"
+  },
+  "codeCompare": {
+    "groupLabel": "Code comparison",
+    "inaccessible": "Inaccessible",
+    "accessible": "Accessible"
+  },
+  "demo": {
+    "label": "Demo: {{title}}"
+  },
+  "theme": {
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "pl": "Polski"
+  }
+}

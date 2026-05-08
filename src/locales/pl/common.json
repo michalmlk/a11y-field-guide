@@ -1,0 +1,60 @@
+{
+  "site": {
+    "title": "Przewodnik Dostępności",
+    "homeAriaLabel": "Strona główna Przewodnika Dostępności",
+    "tagline": "Praktyczne wzorce dostępności — z działającymi demami i odniesieniami WCAG.",
+    "footer": "Zbudowane, aby poznawać wzorce dostępności w sieci."
+  },
+  "nav": {
+    "primary": "Nawigacja główna",
+    "about": "O projekcie",
+    "skipToMain": "Przejdź do treści głównej",
+    "articles": "Artykuły",
+    "breadcrumb": "Ścieżka nawigacji"
+  },
+  "home": {
+    "articlesLabel": "Artykuły"
+  },
+  "about": {
+    "title": "O projekcie",
+    "body": "Przewodnik Dostępności to praktyczne źródło wiedzy o wzorcach dostępności w sieci. Każdy artykuł zawiera działające demo, porównanie kodu zły/dobry oraz odpowiednie kryteria sukcesu WCAG."
+  },
+  "article": {
+    "tagsLabel": "Tagi",
+    "loading": "Ładowanie…",
+    "loadFailed": "Nie udało się wczytać artykułu.",
+    "backToArticles": "Wróć do artykułów",
+    "notFound": "Nie znaleziono artykułu",
+    "wcag": "WCAG {{id}}",
+    "ariaLabel": "{{title}} {{description}}, WCAG: {{wcag}}, tagi: {{tags}}"
+  },
+  "audit": {
+    "panelLabel": "Audyt dostępności",
+    "title": "Audyt A11y",
+    "run": "Uruchom axe",
+    "running": "Trwa…",
+    "failed": "Audyt nie powiódł się",
+    "complete_one": "Audyt zakończony: {{count}} naruszenie",
+    "complete_few": "Audyt zakończony: {{count}} naruszenia",
+    "complete_many": "Audyt zakończony: {{count}} naruszeń",
+    "complete_other": "Audyt zakończony: {{count}} naruszeń",
+    "noViolations": "Nie znaleziono naruszeń"
+  },
+  "codeCompare": {
+    "groupLabel": "Porównanie kodu",
+    "inaccessible": "Niedostępny",
+    "accessible": "Dostępny"
+  },
+  "demo": {
+    "label": "Demo: {{title}}"
+  },
+  "theme": {
+    "switchToDark": "Przełącz na tryb ciemny",
+    "switchToLight": "Przełącz na tryb jasny"
+  },
+  "language": {
+    "label": "Język",
+    "en": "English",
+    "pl": "Polski"
+  }
+}

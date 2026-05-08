@@ -1,0 +1,14 @@
+{
+  "focus-trap": {
+    "title": "Focus Trap",
+    "description": "Keep keyboard focus inside modal dialogs using a proper focus trap implementation."
+  },
+  "aria-roles": {
+    "title": "ARIA Roles",
+    "description": "Use ARIA roles to give semantic meaning to custom interactive widgets."
+  },
+  "color-contrast": {
+    "title": "Color Contrast",
+    "description": "Ensure sufficient contrast ratios for text and interactive elements."
+  }
+}
