@@ -1,0 +1,84 @@
+import DemoShell from '../components/DemoShell'
+import CodeCompare from '../components/CodeCompare'
+import { mountModalDemo } from '../demos/modal-dialog.js'
+import '../demos/modal-dialog.css'
+
+## What is a focus trap?
+
+When a modal dialog opens, keyboard focus must stay inside it. Without a trap,
+pressing Tab from the last focusable element sends focus to the browser chrome
+or back to the page behind the overlay.
+
+WCAG **2.1.2 No Keyboard Trap** requires that users can move focus in *and* out
+of any component using only the keyboard. A correct focus trap satisfies this:
+Tab cycles within the dialog, and Escape (or a visible Close button) returns
+focus to the element that opened it.
+
+## Why it matters
+
+Screen reader users navigate by Tab. If focus escapes a modal, they lose context
+and may not be able to return without reloading the page. Users who rely on
+keyboard navigation face the same problem.
+
+## The pattern
+
+Intercept `keydown` on the dialog and redirect Tab/Shift+Tab when focus reaches
+the boundary.
+
+<CodeCompare
+  badLabel="No focus trap"
+  goodLabel="With focus trap"
+  bad={`function open() {
+  dialog.classList.remove('hidden')
+  dialog.querySelector('button').focus()
+  // Nothing traps Tab — focus leaks out
+}`}
+  good={`const FOCUSABLE =
+  'button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])'
+
+function trapFocus(e) {
+  const nodes = [...dialog.querySelectorAll(FOCUSABLE)]
+  const first = nodes[0]
+  const last  = nodes[nodes.length - 1]
+  if (e.key === 'Tab') {
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus()
+    }
+  }
+  if (e.key === 'Escape') close()
+}
+
+function open() {
+  dialog.classList.remove('hidden')
+  dialog.querySelector('button').focus()
+  dialog.addEventListener('keydown', trapFocus)
+}
+
+function close() {
+  dialog.classList.add('hidden')
+  dialog.removeEventListener('keydown', trapFocus)
+  openBtn.focus()   // ← return focus to trigger
+}`}
+/>
+
+## Live demo
+
+Open the dialog, then Tab through its controls. Press Escape or Close to dismiss.
+
+<DemoShell title="Focus Trap Demo" mount={mountModalDemo} />
+
+## Key details
+
+- **Return focus to the trigger** when closing — not to the top of the page.
+- **Move focus in on open** — to the first focusable element or the dialog heading.
+- **Support Escape** in addition to any visible close button.
+- **`aria-modal="true"`** tells supporting screen readers to hide background content.
+- **Re-query focusable elements** inside the handler so dynamically added controls are included.
+
+## WCAG references
+
+- **2.1.1 Keyboard** — All functionality operable via keyboard
+- **2.1.2 No Keyboard Trap** — Focus can always be moved away via standard keys
+- **4.1.2 Name, Role, Value** — `role="dialog"` + `aria-labelledby` provide the accessible name

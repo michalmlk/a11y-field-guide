@@ -1,0 +1,31 @@
+import DemoShell from '../components/DemoShell';
+import CodeCompare from '../components/CodeCompare';
+import { mountFormErrorsDemo } from '../demos/form-errors.js';
+import '../demos/form-errors.css';
+
+# Accessible Forms
+
+
+
+
+
+## Why it matters
+
+## The pattern
+
+<CodeCompare
+  badLabel="Bad example"
+  goodLabel="Good example"
+  bad={`<form>
+  <label>Name</label>
+  <input type="text" />
+</form>`}
+  good={`<form>
+  <label for="name">Name</label>
+  <input type="text" id="name" />
+</form>`}
+/>
+
+## Live demo
+
+<DemoShell title="Accessible Form Demo" mount={mountFormErrorsDemo} />

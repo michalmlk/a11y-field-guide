@@ -1,0 +1,29 @@
+.demo-btn {
+  padding: 8px 16px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.demo-btn:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.dialog {
+  position: relative;
+  background: #fff;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 400px;
+  margin-top: 16px;
+}
+
+.dialog.hidden {
+  display: none;
+}

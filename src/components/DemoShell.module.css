@@ -1,0 +1,19 @@
+.shell {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin: var(--space-6) 0;
+}
+
+.heading {
+  margin: 0;
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-bg-subtle);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.stage {
+  padding: var(--space-6);
+}

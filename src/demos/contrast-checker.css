@@ -1,0 +1,32 @@
+.contrast-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.field-group input[type="color"] {
+  width: 64px;
+  height: 40px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.contrast-preview {
+  padding: 16px 24px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  min-width: 240px;
+}
