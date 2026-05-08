@@ -13,9 +13,9 @@ interface ArticleCardProps {
 }
 
 export default function ArticleCard({ article }: ArticleCardProps) {
-	const { t } = useTranslation();
-	const title = t(`articles:${article.slug}.title`);
-	const description = t(`articles:${article.slug}.description`);
+	const { t } = useTranslation(["common", "articles"]);
+	const title = t(`${article.slug}.title`, { ns: "articles" });
+	const description = t(`${article.slug}.description`, { ns: "articles" });
 
 	const articleAriaLabel = t("article.ariaLabel", {
 		title,

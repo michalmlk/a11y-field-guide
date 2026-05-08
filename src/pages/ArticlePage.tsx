@@ -29,19 +29,32 @@ const mdxModules = import.meta.glob<{ default: ComponentType }>(
 	"../articles/*/*.mdx",
 );
 
+const lazyCache = new Map<string, ReturnType<typeof lazy>>();
+
+function getLazyMDX(lang: string, slug: string) {
+	const localizedPath = `../articles/${lang}/${slug}.mdx`;
+	const fallbackPath = `../articles/en/${slug}.mdx`;
+	const path = mdxModules[localizedPath] ? localizedPath : fallbackPath;
+	const loader = mdxModules[path];
+	if (!loader) return null;
+	let cached = lazyCache.get(path);
+	if (!cached) {
+		cached = lazy(loader);
+		lazyCache.set(path, cached);
+	}
+	return cached;
+}
+
 export default function ArticlePage() {
 	const { slug } = useParams<{ slug: string }>();
-	const { t, i18n } = useTranslation();
+	const { t, i18n } = useTranslation(["common", "articles"]);
 	const lang = i18n.language.split("-")[0];
 	const meta: ArticleMeta | undefined = articles.find((a) => a.slug === slug);
 
-	const MDXContent = useMemo(() => {
-		const localized = mdxModules[`../articles/${lang}/${slug}.mdx`];
-		const fallback = mdxModules[`../articles/en/${slug}.mdx`];
-		const loader = localized ?? fallback;
-		if (!loader) return null;
-		return lazy(loader);
-	}, [slug, lang]);
+	const MDXContent = useMemo(
+		() => (slug ? getLazyMDX(lang, slug) : null),
+		[slug, lang],
+	);
 
 	if (!meta || !MDXContent) {
 		return (
@@ -54,7 +67,7 @@ export default function ArticlePage() {
 		);
 	}
 
-	const title = t(`articles:${meta.slug}.title`);
+	const title = t(`${meta.slug}.title`, { ns: "articles" });
 
 	return (
 		<article>
