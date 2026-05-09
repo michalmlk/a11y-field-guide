@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { articles } from "../articles/index";
 import type { ArticleMeta } from "../components/ArticleCard";
 import { Link, useParams } from "react-router";
+import styles from "./ArticlePage.module.css";
 
 class ArticleErrorBoundary extends Component<
 	{ children: ReactNode; failedText: string; backText: string },
@@ -36,8 +37,11 @@ function getLazyMDX(lang: string, slug: string) {
 	const fallbackPath = `../articles/en/${slug}.mdx`;
 	const path = mdxModules[localizedPath] ? localizedPath : fallbackPath;
 	const loader = mdxModules[path];
-	if (!loader) return null;
+	if (!loader) {
+		return null;
+	}
 	let cached = lazyCache.get(path);
+
 	if (!cached) {
 		cached = lazy(loader);
 		lazyCache.set(path, cached);
@@ -70,29 +74,38 @@ export default function ArticlePage() {
 	const title = t(`${meta.slug}.title`, { ns: "articles" });
 
 	return (
-		<article>
-			<header>
+		<article className={styles.article}>
+			<header className={styles.header}>
 				<nav aria-label={t("nav.breadcrumb")}>
 					<Link to="/">{t("nav.articles")}</Link> / {title}
 				</nav>
-				<h1>{title}</h1>
+				<h1 id="article-title">{title}</h1>
 				<p>
 					<span>{t("article.wcag", { id: meta.wcag })}</span>
 				</p>
-				<ul aria-label={t("article.tagsLabel")}>
+				<ul aria-label={t("article.tagsLabel")} className={styles.tags}>
 					{meta.tags.map((tag) => (
-						<li key={tag}>{tag}</li>
+						<li key={tag} className={styles.tag}>
+							{tag}
+						</li>
 					))}
 				</ul>
 			</header>
-			<ArticleErrorBoundary
-				failedText={t("article.loadFailed")}
-				backText={t("article.backToArticles")}
+			<section
+				className={styles.content}
+				// biome-ignore lint/a11y/noNoninteractiveTabindex: scrollable region must be keyboard reachable
+				tabIndex={0}
+				aria-labelledby="article-title"
 			>
-				<Suspense fallback={<p>{t("article.loading")}</p>}>
-					<MDXContent />
-				</Suspense>
-			</ArticleErrorBoundary>
+				<ArticleErrorBoundary
+					failedText={t("article.loadFailed")}
+					backText={t("article.backToArticles")}
+				>
+					<Suspense fallback={<p>{t("article.loading")}</p>}>
+						<MDXContent />
+					</Suspense>
+				</ArticleErrorBoundary>
+			</section>
 		</article>
 	);
 }
