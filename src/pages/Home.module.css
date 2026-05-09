@@ -1,0 +1,13 @@
+.description {
+	color: var(--color-text-muted);
+	margin-bottom: var(--space-8);
+}
+
+.list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+	gap: var(--space-6);
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
