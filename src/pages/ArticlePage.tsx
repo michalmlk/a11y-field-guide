@@ -1,9 +1,10 @@
-import { lazy, Suspense, useMemo, Component } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, Component } from "react";
 import type { ComponentType, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { articles } from "../articles/index";
 import type { ArticleMeta } from "../components/ArticleCard";
 import { Link, useParams } from "react-router";
+import { wcagCriteria } from "../utils/wcag-criteria";
 import styles from "./ArticlePage.module.css";
 
 class ArticleErrorBoundary extends Component<
@@ -17,9 +18,11 @@ class ArticleErrorBoundary extends Component<
 	render() {
 		if (this.state.failed)
 			return (
-				<div>
-					<p>{this.props.failedText}</p>
-					<Link to="/">{this.props.backText}</Link>
+				<div role="alert">
+					<h1>{this.props.failedText}</h1>
+					<p>
+						<Link to="/">{this.props.backText}</Link>
+					</p>
 				</div>
 			);
 		return this.props.children;
@@ -32,9 +35,15 @@ const mdxModules = import.meta.glob<{ default: ComponentType }>(
 
 const lazyCache = new Map<string, ReturnType<typeof lazy>>();
 
-function getLazyMDX(lang: string, slug: string) {
+interface ResolvedMDX {
+	Component: ReturnType<typeof lazy>;
+	lang: string;
+}
+
+function getLazyMDX(lang: string, slug: string): ResolvedMDX | null {
 	const localizedPath = `../articles/${lang}/${slug}.mdx`;
 	const fallbackPath = `../articles/en/${slug}.mdx`;
+	const resolvedLang = mdxModules[localizedPath] ? lang : "en";
 	const path = mdxModules[localizedPath] ? localizedPath : fallbackPath;
 	const loader = mdxModules[path];
 	if (!loader) {
@@ -46,7 +55,7 @@ function getLazyMDX(lang: string, slug: string) {
 		cached = lazy(loader);
 		lazyCache.set(path, cached);
 	}
-	return cached;
+	return { Component: cached, lang: resolvedLang };
 }
 
 export default function ArticlePage() {
@@ -54,13 +63,19 @@ export default function ArticlePage() {
 	const { t, i18n } = useTranslation(["common", "articles"]);
 	const lang = i18n.language.split("-")[0];
 	const meta: ArticleMeta | undefined = articles.find((a) => a.slug === slug);
+	const headingRef = useRef<HTMLHeadingElement>(null);
 
-	const MDXContent = useMemo(
+	const resolved = useMemo(
 		() => (slug ? getLazyMDX(lang, slug) : null),
 		[slug, lang],
 	);
 
-	if (!meta || !MDXContent) {
+	useEffect(() => {
+		if (!meta || !resolved) return;
+		headingRef.current?.focus();
+	}, [slug, meta, resolved]);
+
+	if (!meta || !resolved) {
 		return (
 			<div>
 				<h1>{t("article.notFound")}</h1>
@@ -72,16 +87,44 @@ export default function ArticlePage() {
 	}
 
 	const title = t(`${meta.slug}.title`, { ns: "articles" });
+	const { Component: MDXContent, lang: contentLang } = resolved;
+	const criterion = wcagCriteria[meta.wcag];
 
 	return (
-		<article className={styles.article}>
+		<article className={styles.article} lang={contentLang}>
 			<header className={styles.header}>
 				<nav aria-label={t("nav.breadcrumb")}>
-					<Link to="/">{t("nav.articles")}</Link> / {title}
+					<ol className={styles.breadcrumb}>
+						<li>
+							<Link to="/">{t("nav.articles")}</Link>
+						</li>
+						<li aria-current="page">{title}</li>
+					</ol>
 				</nav>
-				<h1 id="article-title">{title}</h1>
-				<p>
-					<span>{t("article.wcag", { id: meta.wcag })}</span>
+				<h1 ref={headingRef} tabIndex={-1} className={styles.title}>
+					{title}
+				</h1>
+				<p className={styles.wcagMeta}>
+					{criterion ? (
+						<a
+							className={styles.wcagLink}
+							href={criterion.url}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{t("article.wcagFull", {
+								id: criterion.id,
+								level: criterion.level,
+								title: criterion.title,
+							})}
+							<span className="visually-hidden">
+								{" "}
+								{t("article.opensInNewTab")}
+							</span>
+						</a>
+					) : (
+						<span>{t("article.wcag", { id: meta.wcag })}</span>
+					)}
 				</p>
 				<ul aria-label={t("article.tagsLabel")} className={styles.tags}>
 					{meta.tags.map((tag) => (
@@ -91,12 +134,7 @@ export default function ArticlePage() {
 					))}
 				</ul>
 			</header>
-			<section
-				className={styles.content}
-				// biome-ignore lint/a11y/noNoninteractiveTabindex: scrollable region must be keyboard reachable
-				tabIndex={0}
-				aria-labelledby="article-title"
-			>
+			<div className={styles.content}>
 				<ArticleErrorBoundary
 					failedText={t("article.loadFailed")}
 					backText={t("article.backToArticles")}
@@ -105,7 +143,7 @@ export default function ArticlePage() {
 						<MDXContent />
 					</Suspense>
 				</ArticleErrorBoundary>
-			</section>
+			</div>
 		</article>
 	);
 }

@@ -26,7 +26,8 @@
     "backToArticles": "Back to articles",
     "notFound": "Article not found",
     "wcag": "WCAG {{id}}",
-    "ariaLabel": "{{title}} {{description}}, WCAG: {{wcag}}, tags: {{tags}}"
+    "wcagFull": "WCAG {{id}} (Level {{level}}) — {{title}}",
+    "opensInNewTab": "(opens in new tab)"
   },
   "audit": {
     "panelLabel": "Accessibility audit",

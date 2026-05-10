@@ -16,21 +16,18 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 	const { t } = useTranslation(["common", "articles"]);
 	const title = t(`${article.slug}.title`, { ns: "articles" });
 	const description = t(`${article.slug}.description`, { ns: "articles" });
-	const articleAriaLabel = t("article.ariaLabel", {
-		title,
-		description,
-		wcag: article.wcag,
-		tags: article.tags.join(", "),
-	});
 
 	return (
-		<article className={styles.card} aria-label={articleAriaLabel}>
+		<article className={styles.card}>
 			<header>
 				<h2 className={styles.title}>
 					<Link to={`/articles/${article.slug}`}>{title}</Link>
 				</h2>
+
 				<p className={styles.wcag}>
-					<span className={styles.tag}>{t("article.wcag", { id: article.wcag })}</span>
+					<span className={styles.tag}>
+						{t("article.wcag", { id: article.wcag })}
+					</span>
 				</p>
 			</header>
 			<p className={styles.description}>{description}</p>

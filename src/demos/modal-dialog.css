@@ -1,7 +1,26 @@
-.demo-btn {
+.modal-demo {
+  --demo-bg: #ffffff;
+  --demo-fg: #1a202c;
+  --demo-border: #2563eb;
+  --demo-btn-bg: #2563eb;
+  --demo-btn-fg: #ffffff;
+  --demo-btn-focus: #2563eb;
+  color: var(--demo-fg);
+}
+
+.modal-demo[data-theme="dark"] {
+  --demo-bg: #1e293b;
+  --demo-fg: #f1f5f9;
+  --demo-border: #60a5fa;
+  --demo-btn-bg: #60a5fa;
+  --demo-btn-fg: #0f172a;
+  --demo-btn-focus: #93c5fd;
+}
+
+.modal-demo .demo-btn {
   padding: 8px 16px;
-  background: #2563eb;
-  color: #fff;
+  background: var(--demo-btn-bg);
+  color: var(--demo-btn-fg);
   border: none;
   border-radius: 6px;
   font-size: 1rem;
@@ -9,21 +28,22 @@
   margin: 4px;
 }
 
-.demo-btn:focus-visible {
-  outline: 3px solid #2563eb;
+.modal-demo .demo-btn:focus-visible {
+  outline: 3px solid var(--demo-btn-focus);
   outline-offset: 2px;
 }
 
-.dialog {
+.modal-demo .dialog {
   position: relative;
-  background: #fff;
-  border: 2px solid #2563eb;
+  background: var(--demo-bg);
+  color: var(--demo-fg);
+  border: 2px solid var(--demo-border);
   border-radius: 8px;
   padding: 24px;
   max-width: 400px;
   margin-top: 16px;
 }
 
-.dialog.hidden {
+.modal-demo .dialog.hidden {
   display: none;
 }

@@ -26,7 +26,8 @@
     "backToArticles": "Wróć do artykułów",
     "notFound": "Nie znaleziono artykułu",
     "wcag": "WCAG {{id}}",
-    "ariaLabel": "{{title}} {{description}}, WCAG: {{wcag}}, tagi: {{tags}}"
+    "wcagFull": "WCAG {{id}} (Poziom {{level}}) — {{title}}",
+    "opensInNewTab": "(otwiera się w nowej karcie)"
   },
   "audit": {
     "panelLabel": "Audyt dostępności",
